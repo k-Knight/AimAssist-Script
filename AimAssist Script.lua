@@ -59,7 +59,7 @@ end
 local function GetClosestPlayer()
     local MaximumDistance = CircleRadius
     local Target = nil
-    local prevDistance = MaximumDistance + 1
+    local depth = math.huge
 
     for _, v in next, Players:GetPlayers() do
         if v.Name ~= LocalPlayer.Name then
@@ -75,9 +75,9 @@ local function GetClosestPlayer()
                                     local VectorDistance = math.sqrt(math.pow(vector3.X - MousePoint.X, 2) + math.pow(vector3.Y - MousePoint.Y, 2))
 
                                     if VectorDistance < MaximumDistance then
-                                        if VectorDistance < prevDistance then
+                                        if vector3.Z < depth then
                                             Target = aimPart
-                                            prevDistance = VectorDistance
+                                            depth = vector3.Z
                                         end
                                     end
                                 end
@@ -110,15 +110,11 @@ local function updateMouse(target)
     local posVector3 = Camera:WorldToScreenPoint(target.Position)
     local x, y = posVector3.X - Mouse.X, posVector3.Y - Mouse.Y
 
-    if math.abs(x) > 2 then
+    if math.abs(x) > 4 then
         x = math.sign(x) * math.max(math.sqrt(math.abs(x)), 4)
-    else
-        x = x * 2
     end
-    if math.abs(y) > 2 then
+    if math.abs(y) > 4 then
         y = math.sign(y) * math.max(math.sqrt(math.abs(y)), 4)
-    else
-        y = y * 2
     end
 
     if KRNL_LOADED then
